@@ -1,0 +1,9 @@
+Resources:
+  Function:
+    Properties:
+      CodeUri: Function
+      Handler: com.javed.lambda.App
+      MemorySize: 128
+      Runtime: java8
+      Timeout: 300
+    Type: AWS::Serverless::Function
