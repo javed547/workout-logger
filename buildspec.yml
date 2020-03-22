@@ -12,8 +12,11 @@ phases:
     commands:
       - echo Building application -- `date`
       - mvn install
+      - aws cloudformation package --template-file template.yml --s3-bucket javed-547-lambda/workout-logger-build/workout-logger-0.0.1.jar --output-template-file outputtemplate.yml
 artifacts:
   files:
     - target/workout-logger-0.0.1.jar
     - appspec.yml
+    - template.yml
+    - outputtemplate.yml
   discard-paths: yes
