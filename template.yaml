@@ -22,3 +22,8 @@ Resources:
           Properties:
             Path: /user
             Method: POST
+        HealthApi:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
