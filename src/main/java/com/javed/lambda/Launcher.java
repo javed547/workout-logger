@@ -6,9 +6,7 @@ import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
 import com.amazonaws.serverless.proxy.spring.SpringLambdaContainerHandler;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.javed.lambda.config.LoggingInterceptor;
 import com.javed.lambda.config.MvcConfig;
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,10 +14,10 @@ import org.slf4j.LoggerFactory;
  * Hello world!
  *
  */
-public class App implements RequestHandler<AwsProxyRequest, AwsProxyResponse>
+public class Launcher implements RequestHandler<AwsProxyRequest, AwsProxyResponse>
 {
     private static SpringLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
-    private static final Logger logger = LoggerFactory.getLogger(App.class);
+    private static final Logger logger = LoggerFactory.getLogger(Launcher.class);
 
     @Override
     public AwsProxyResponse handleRequest(AwsProxyRequest awsProxyRequest, Context context) {
