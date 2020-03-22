@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
  * Hello world!
  *
  */
-public class Launcher implements RequestHandler<AwsProxyRequest, AwsProxyResponse>
+public class App implements RequestHandler<AwsProxyRequest, AwsProxyResponse>
 {
     private static SpringLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
-    private static final Logger logger = LoggerFactory.getLogger(Launcher.class);
+    private static final Logger logger = LoggerFactory.getLogger(App.class);
 
     @Override
     public AwsProxyResponse handleRequest(AwsProxyRequest awsProxyRequest, Context context) {
