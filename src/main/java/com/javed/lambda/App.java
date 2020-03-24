@@ -9,9 +9,17 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.javed.lambda.config.MvcConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Hello world!
+ * App acts as application handler class.
+ * It initializes spring lambda container with @{@link MvcConfig} with in turns enable Spring MVC in back ground
+ * With the help of this setup, application can be developed as Spring MVC with annotation driven.
+ *
+ * @author Mohd Javed
+ * @since 0.0.1
+ * @version 0.0.1
  *
  */
 public class App implements RequestHandler<AwsProxyRequest, AwsProxyResponse>

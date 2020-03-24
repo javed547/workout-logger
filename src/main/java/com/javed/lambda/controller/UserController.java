@@ -1,8 +1,10 @@
 package com.javed.lambda.controller;
 
 import com.javed.lambda.model.User;
+import com.javed.lambda.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,67 +17,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type User controller.
+ */
 @RestController
 public class UserController {
 
-    @Value("${dynamodb.table.name}")
-    private String tableName;
-
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @GetMapping(value = "/health")
-    public ResponseEntity<String> healthCheck() {
-        logger.debug("sending application health status");
-        return new ResponseEntity<String>("Hi. Application is working fine.", HttpStatus.OK);
-    }
+    @Autowired
+    private UserService userService;
 
-    @PostMapping(value = "/users",
+    /**
+     * Signup response entity.
+     *
+     * @param user the user
+     * @return the response entity
+     */
+    @PostMapping(value = "/signup",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> insertUser(@RequestBody User user) {
-
-        DynamoDbClient dynamoDbClient = null;
-        logger.debug("Successfully created DynamoDB client and going to create user with username : {}", user.getUsername());
-
-        HashMap<String, AttributeValue> itemValues = new HashMap<String, AttributeValue>();
-        prepareUserInsert(itemValues, user);
-
-        PutItemRequest putItemRequest = PutItemRequest
-                .builder()
-                .tableName(tableName)
-                .item(itemValues)
-                .build();
-
-        try {
-            dynamoDbClient = DynamoDbClient.create();
-            dynamoDbClient.putItem(putItemRequest);
-            logger.debug("Successfully inserted user data for username : {}", user.getUsername());
-        } catch (DynamoDbException e) {
-            logger.error("error occurred while adding record to dynamo db : {}", e.getMessage());
-        } finally {
-            if (null != dynamoDbClient) {
-                logger.debug("closing dynamo db client");
-                dynamoDbClient.close();
-            }
-        }
-
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+    public ResponseEntity<User> signup(@RequestBody User user) {
+        User resultUser = userService.signup(user);
+        return new ResponseEntity<User>(resultUser, HttpStatus.OK);
     }
 
-    private HashMap<String, AttributeValue> prepareUserInsert(HashMap<String, AttributeValue> itemValues, User user) {
-        itemValues.put("username", AttributeValue.builder().s(user.getUsername()).build());
-        itemValues.put("password", AttributeValue.builder().s(user.getPassword()).build());
-        itemValues.put("firstname", AttributeValue.builder().s(user.getFirstname()).build());
-
-        itemValues.put("lastname", AttributeValue.builder().s(user.getLastname()).build());
-        itemValues.put("email", AttributeValue.builder().s(user.getEmail()).build());
-        itemValues.put("address", AttributeValue.builder().s(user.getAddress()).build());
-
-        itemValues.put("phone", AttributeValue.builder().s(String.valueOf(user.getPhone())).build());
-        logger.debug("user object created with details as {}", user.toString());
-        return itemValues;
-    }
-
+    /**
+     * Insert user response entity.
+     *
+     * @param userName the user name
+     * @return the response entity
+     */
     @PostMapping(value = "/users/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

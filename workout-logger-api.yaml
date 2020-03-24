@@ -1,18 +1,136 @@
-swagger: "2.0"
+openapi: 3.0.0
 info:
-  title: Workout Logger API
-  description: Workout Logger API description in Markdown.
-  version: 1.0.0
-host: api.example.com
-schemes:
-  - https
+  version: '1.0.0'
+  title: 'Work Out Log API'
+  description: 'Work Out Log API helps to log fitness workout'
+  termsOfService: https://termOfService.foo.com
+  license:
+    name: Mohd Javed Khan
+    url: https://licence.foo.com
+  contact:
+    email: jal90javed@gmail.com
+    name: Mohd Javed Khan
+    url: https://contact-us.foo.com
 paths:
+  /signup:
+    post:
+      summary: used to signup to workout-logger-api
+      description: Optional extended description in Markdown.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example:
+                    javed547
+                password:
+                  type: string
+                  example:
+                    password123
+                firstname:
+                  type: string
+                  example:
+                    Mohd Javed
+                lastname:
+                  type: string
+                  example:
+                    Khan
+                email:
+                  type: string
+                  example:
+                    jal90javed@gmail.com
+                address:
+                  type: string
+                  example:
+                    Test Address 1
+                phone:
+                  type: number
+                  example:
+                    8087680744
+      responses:
+        200:
+          description: successfully logged into workout-api-logger
+  /signin:
+    post:
+      summary: used to login to workout-logger-api
+      description: Optional extended description in Markdown.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example:
+                    javed547
+                password:
+                  type: string
+                  example:
+                    password123
+      responses:
+        200:
+          description: successfully logged into workout-api-logger
   /users:
     get:
       summary: Returns a list of users.
       description: Optional extended description in Markdown.
-      produces:
-        - application/json
+      parameters:
+        - name: pagesize
+          in: query
+          description: maximumn number of items allowed in response
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+            example: 5
+        - name: pagenumber
+          in: query
+          description: page number to list content from
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+            example: 7
       responses:
         200:
-          description: OK
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    username:
+                      type: string
+                      example:
+                        javed547
+                    password:
+                      type: string
+                      example:
+                        password123
+                    firstname:
+                      type: string
+                      example:
+                        Mohd Javed
+                    lastname:
+                      type: string
+                      example:
+                        Khan
+                    email:
+                      type: string
+                      example:
+                        jal90javed@gmail.com
+                    address:
+                      type: string
+                      example:
+                        Test Address 1
+                    phone:
+                      type: number
+                      example:
+                        8087680744
