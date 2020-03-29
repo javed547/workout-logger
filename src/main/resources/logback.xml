@@ -6,12 +6,12 @@
         </layout>
     </appender>
 
-    <logger name="com.javed" level="debug"/>
+    <logger name="com.javed" level="INFO"/>
 
     <logger name="org.springframework" level="info"/>
     <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="OFF"/>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

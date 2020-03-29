@@ -13,7 +13,7 @@ info:
     url: https://contact-us.foo.com
 paths:
   /signup:
-    post:
+    put:
       summary: used to signup to workout-logger-api
       description: Optional extended description in Markdown.
       requestBody:
@@ -52,8 +52,8 @@ paths:
                   example:
                     8087680744
       responses:
-        200:
-          description: successfully logged into workout-api-logger
+        201:
+          description: successfully signed up user into workout-api-logger
   /signin:
     post:
       summary: used to login to workout-logger-api
@@ -78,7 +78,7 @@ paths:
           description: successfully logged into workout-api-logger
   /users:
     get:
-      summary: Returns a list of users.
+      summary: returns a list of users.
       description: Optional extended description in Markdown.
       parameters:
         - name: pagesize
@@ -86,6 +86,7 @@ paths:
           description: maximumn number of items allowed in response
           schema:
             type: integer
+            required: true
             minimum: 1
             maximum: 10
             example: 5
@@ -94,6 +95,7 @@ paths:
           description: page number to list content from
           schema:
             type: integer
+            required: true
             minimum: 1
             maximum: 10
             example: 7
@@ -134,3 +136,136 @@ paths:
                       type: number
                       example:
                         8087680744
+  /users/{username}:
+    put:
+      summary: used to log workout for particular logged in user
+      description: Optional extended description in Markdown.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example:
+                    javed547
+                muscleGroup:
+                  type: string
+                  example:
+                    Bicep
+                exercise:
+                  type: string
+                  example:
+                    Dumbell Curls
+                setNo:
+                  type: number
+                  example:
+                    3
+                repetitions:
+                  type: number
+                  example:
+                    14
+                date:
+                  type: string
+                  example:
+                    22-12-2019
+      responses:
+        201:
+          description: Successfully logged work-out details in application
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example:
+                      javed547
+                  muscleGroup:
+                    type: string
+                    example:
+                      Bicep
+                  exercise:
+                    type: string
+                    example:
+                      Dumbell Curls
+                  setNo:
+                    type: number
+                    example:
+                      3
+                  repetitions:
+                    type: number
+                    example:
+                      14
+                  date:
+                    type: string
+                    example:
+                      22-12-2019
+    get:
+      summary: returns work-out details logged in by user
+      description: Optional extended description in Markdown.
+      parameters:
+        - name: pagesize
+          in: query
+          description: maximumn number of pages allowed in response
+          schema:
+            type: integer
+            required: true
+            minimum: 1
+            maximum: 10
+            example: 5
+        - name: pagenumber
+          in: query
+          description: page number to list content from
+          schema:
+            type: integer
+            required: true
+            minimum: 1
+            maximum: 10
+            example: 7
+        - name: date
+          in: query
+          description: date to filter out the result from application
+          schema:
+            type: string
+            required: false
+            example:
+              22-12-2019
+      responses:
+        200:
+          description: returns array list of work-out details logged in by user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    username:
+                      type: string
+                      example:
+                        javed547
+                    muscleGroup:
+                      type: string
+                      example:
+                        Bicep
+                    exercise:
+                      type: string
+                      example:
+                        Dumbell Curls
+                    setNo:
+                      type: number
+                      example:
+                        3
+                    repetitions:
+                      type: number
+                      example:
+                        14
+                    date:
+                      type: string
+                      example:
+                        22-12-2019
+
+
+

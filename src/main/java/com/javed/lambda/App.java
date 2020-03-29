@@ -7,10 +7,9 @@ import com.amazonaws.serverless.proxy.spring.SpringLambdaContainerHandler;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.javed.lambda.config.MvcConfig;
+import com.javed.lambda.config.SpringBootConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * App acts as application handler class.
@@ -32,6 +31,7 @@ public class App implements RequestHandler<AwsProxyRequest, AwsProxyResponse>
         if (handler == null) {
             try {
                 handler = SpringLambdaContainerHandler.getAwsProxyHandler(MvcConfig.class);
+                //handler = SpringLambdaContainerHandler.getAwsProxyHandler(SpringBootConfig.class);
             } catch (ContainerInitializationException e) {
                 logger.error("Unable to create handler {}", e.getMessage());
                 return null;

@@ -1,16 +1,17 @@
 package com.javed.lambda.repository;
 
+import com.javed.lambda.model.Credential;
 import com.javed.lambda.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
-import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
-import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
+import software.amazon.awssdk.services.dynamodb.model.*;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
@@ -20,8 +21,6 @@ public class UserRepositoryImpl implements UserRepository {
     @Value("${dynamodb.table.name}")
     private String tableName;
 
-    private DynamoDbClient dynamoDbClient;
-
     /**
      * inserts users to workout-api-logger application
      *
@@ -29,6 +28,7 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public User signup(User user) {
+        DynamoDbClient dynamoDbClient = null;
         HashMap<String, AttributeValue> itemValues = new HashMap<String, AttributeValue>();
         prepareUserInsert(itemValues, user);
 
@@ -41,7 +41,7 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             dynamoDbClient = DynamoDbClient.create();
             dynamoDbClient.putItem(putItemRequest);
-            logger.debug("Successfully inserted user data for username : {}", user.getUsername());
+            logger.info("Successfully inserted user data for username : {}", user.getUsername());
         } catch (DynamoDbException e) {
             logger.error("error occurred while adding record to dynamo db : {}", e.getMessage());
         } finally {
@@ -52,6 +52,47 @@ public class UserRepositoryImpl implements UserRepository {
         }
 
         return user;
+    }
+
+    /**
+     * check user credentials against application to authenticate users
+     *
+     * @param credential@return @{@link Credential}
+     */
+    @Override
+    public Credential signin(Credential credential) {
+        DynamoDbClient dynamoDbClient = null;
+        logger.info("calling dynamoDb table to authenticate username : {}", credential.getUsername());
+
+        Credential credentialResult = null;
+        Map<String, String> expressionAttributesNames = new HashMap<>();
+        expressionAttributesNames.put("#username", "username");
+
+        Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
+        expressionAttributeValues.put(":usernameValue", AttributeValue.builder().s(credential.getUsername()).build());
+
+        QueryRequest queryRequest = QueryRequest
+                .builder()
+                .tableName(tableName)
+                .keyConditionExpression("#username = :usernameValue")
+                .expressionAttributeNames(expressionAttributesNames)
+                .expressionAttributeValues(expressionAttributeValues)
+                .build();
+
+        try {
+            dynamoDbClient = DynamoDbClient.create();
+            QueryResponse queryResponse = dynamoDbClient.query(queryRequest);
+            credentialResult = castToUsers(queryResponse.items());
+            logger.info("successfully pulled user data for username : {}", credential.getUsername());
+        } catch (DynamoDbException e) {
+            logger.error("error occurred while retrieving record to dynamo db : {}", e.getMessage());
+        } finally {
+            if (null != dynamoDbClient) {
+                logger.debug("closing dynamo db client");
+                dynamoDbClient.close();
+            }
+        }
+        return credentialResult;
     }
 
     private HashMap<String, AttributeValue> prepareUserInsert(HashMap<String, AttributeValue> itemValues, User user) {
@@ -66,6 +107,14 @@ public class UserRepositoryImpl implements UserRepository {
         itemValues.put("phone", AttributeValue.builder().s(String.valueOf(user.getPhone())).build());
         logger.debug("user object created with details as {}", user.toString());
         return itemValues;
+    }
+
+    private Credential castToUsers(List<Map<String, AttributeValue>> items) {
+        Credential credential = new Credential();
+        credential.setUsername(items.get(0).get("username").s());
+        credential.setPassword(items.get(0).get("password").s());
+        logger.debug("credential object created with details as {}", credential.toString());
+        return credential;
     }
 
 }
