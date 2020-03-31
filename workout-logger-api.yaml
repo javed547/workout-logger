@@ -101,9 +101,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/User"
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
   /users/{username}:
     put:
       summary: used to log workout for particular logged in user
@@ -169,9 +172,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/WorkOut"
+                type: object
+                properties:
+                  workouts:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/WorkOut"
 components:
   schemas:
     User:
