@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   version: '1.0.0'
-  title: 'Work Out Log API'
+  title: 'Work Out Logs - OpenAPI 3.0'
   description: 'Work Out Log API helps to log fitness workout'
   termsOfService: https://termOfService.foo.com
   license:
@@ -11,75 +11,67 @@ info:
     email: jal90javed@gmail.com
     name: Mohd Javed Khan
     url: https://contact-us.foo.com
+servers:
+  - url: http://petstore.swagger.io/v1
+tags:
+  - name: users
+    description: User sign up and sign in. You can also list down the users list (should be only for the administrator)
+    externalDocs:
+      description: Find out more
+      url: "http://swagger.io"
+  - name: workout
+    description: Log your workout details to application and interact with system daily to build full log activity
+    externalDocs:
+      description: Find out more
+      url: "http://swagger.io"
 paths:
   /signup:
     put:
       summary: used to signup to workout-logger-api
+      tags:
+        - users
       description: Optional extended description in Markdown.
+      operationId: addUser
+      security:
+        - workout_log_auth2:
+            - "write:workout"
+            - "read:workout"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example:
-                    javed547
-                password:
-                  type: string
-                  example:
-                    password123
-                firstname:
-                  type: string
-                  example:
-                    Mohd Javed
-                lastname:
-                  type: string
-                  example:
-                    Khan
-                email:
-                  type: string
-                  example:
-                    jal90javed@gmail.com
-                address:
-                  type: string
-                  example:
-                    Test Address 1
-                phone:
-                  type: number
-                  example:
-                    8087680744
+              $ref: "#/components/schemas/User"
       responses:
         201:
           description: successfully signed up user into workout-api-logger
   /signin:
     post:
       summary: used to login to workout-logger-api
+      tags:
+        - users
       description: Optional extended description in Markdown.
+      operationId: logInUser
+      security:
+        - workout_log_auth2:
+            - "write:workout"
+            - "read:workout"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example:
-                    javed547
-                password:
-                  type: string
-                  example:
-                    password123
+              $ref: "#/components/schemas/Credential"
       responses:
         200:
           description: successfully logged into workout-api-logger
   /users:
     get:
       summary: returns a list of users.
+      tags:
+        - users
       description: Optional extended description in Markdown.
+      operationId: listUser
       parameters:
         - name: pagesize
           in: query
@@ -99,6 +91,10 @@ paths:
             minimum: 1
             maximum: 10
             example: 7
+      security:
+        - workout_log_auth2:
+            - "write:workout"
+            - "read:workout"
       responses:
         200:
           description: SUCCESS
@@ -107,105 +103,37 @@ paths:
               schema:
                 type: array
                 items:
-                  properties:
-                    username:
-                      type: string
-                      example:
-                        javed547
-                    password:
-                      type: string
-                      example:
-                        password123
-                    firstname:
-                      type: string
-                      example:
-                        Mohd Javed
-                    lastname:
-                      type: string
-                      example:
-                        Khan
-                    email:
-                      type: string
-                      example:
-                        jal90javed@gmail.com
-                    address:
-                      type: string
-                      example:
-                        Test Address 1
-                    phone:
-                      type: number
-                      example:
-                        8087680744
+                  $ref: "#/components/schemas/User"
   /users/{username}:
     put:
       summary: used to log workout for particular logged in user
+      tags:
+        - workout
       description: Optional extended description in Markdown.
+      operationId: addWorkOut
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example:
-                    javed547
-                muscleGroup:
-                  type: string
-                  example:
-                    Bicep
-                exercise:
-                  type: string
-                  example:
-                    Dumbell Curls
-                setNo:
-                  type: number
-                  example:
-                    3
-                repetitions:
-                  type: number
-                  example:
-                    14
-                date:
-                  type: string
-                  example:
-                    22-12-2019
+              $ref: "#/components/schemas/WorkOut"
+      security:
+        - workout_log_auth2:
+            - "write:workout"
+            - "read:workout"
       responses:
         201:
           description: Successfully logged work-out details in application
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  username:
-                    type: string
-                    example:
-                      javed547
-                  muscleGroup:
-                    type: string
-                    example:
-                      Bicep
-                  exercise:
-                    type: string
-                    example:
-                      Dumbell Curls
-                  setNo:
-                    type: number
-                    example:
-                      3
-                  repetitions:
-                    type: number
-                    example:
-                      14
-                  date:
-                    type: string
-                    example:
-                      22-12-2019
+                $ref: "#/components/schemas/WorkOut"
     get:
       summary: returns work-out details logged in by user
+      tags:
+        - workout
       description: Optional extended description in Markdown.
+      operationId: listWorkOut
       parameters:
         - name: pagesize
           in: query
@@ -214,7 +142,6 @@ paths:
             type: integer
             required: true
             minimum: 1
-            maximum: 10
             example: 5
         - name: pagenumber
           in: query
@@ -223,7 +150,6 @@ paths:
             type: integer
             required: true
             minimum: 1
-            maximum: 10
             example: 7
         - name: date
           in: query
@@ -233,6 +159,10 @@ paths:
             required: false
             example:
               22-12-2019
+      security:
+        - workout_log_auth2:
+            - "write:workout"
+            - "read:workout"
       responses:
         200:
           description: returns array list of work-out details logged in by user
@@ -241,31 +171,137 @@ paths:
               schema:
                 type: array
                 items:
-                  properties:
-                    username:
-                      type: string
-                      example:
-                        javed547
-                    muscleGroup:
-                      type: string
-                      example:
-                        Bicep
-                    exercise:
-                      type: string
-                      example:
-                        Dumbell Curls
-                    setNo:
-                      type: number
-                      example:
-                        3
-                    repetitions:
-                      type: number
-                      example:
-                        14
-                    date:
-                      type: string
-                      example:
-                        22-12-2019
-
-
-
+                  $ref: "#/components/schemas/WorkOut"
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - username
+        - password
+        - firstname
+        - lastname
+        - email
+        - address
+        - phone
+      properties:
+        username:
+          type: string
+          example:
+            javed547
+        password:
+          type: string
+          example:
+            password123
+        firstname:
+          type: string
+          example:
+            Mohd Javed
+        lastname:
+          type: string
+          example:
+            Khan
+        email:
+          type: string
+          example:
+            jal90javed@gmail.com
+        address:
+          type: string
+          example:
+            Test Address 1
+        phone:
+          type: number
+          example:
+            8087680744
+    Credential:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example:
+            javed547
+        password:
+          type: string
+          example:
+            password123
+    WorkOut:
+      type: object
+      required:
+        - username
+        - muscleGroup
+        - exercise
+        - setNo
+        - repetitions
+        - date
+      properties:
+        username:
+          type: string
+          example:
+            javed547
+        muscleGroup:
+          type: string
+          example:
+            Bicep
+        exercise:
+          type: string
+          example:
+            Dumbell Curls
+        setNo:
+          type: number
+          example:
+            3
+        repetitions:
+          type: number
+          example:
+            14
+        date:
+          type: string
+          example:
+            22-12-2019
+    Paginate:
+      type: object
+      required:
+        - pagesize
+        - pagenumber
+      properties:
+        pagesize:
+          type: integer
+          format: int32
+          minimum: 1
+          example:
+            2
+        pagenumber:
+          type: integer
+          format: int32
+          minimum: 1
+          example:
+            2
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+          example:
+            Internal Server Error
+  securitySchemes:
+    workout_log_auth2:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'https://petstore.swagger.io/oauth/authorize'
+          scopes:
+            'write:workout': modify/add workout logs in your account
+            'read:workout': read your workout logs
+    api_key:
+      type: apiKey
+      name: apiKey
+      in: header
