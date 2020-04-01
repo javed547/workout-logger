@@ -2,6 +2,7 @@ package com.javed.lambda.controller;
 
 import com.javed.lambda.model.Credential;
 import com.javed.lambda.model.User;
+import com.javed.lambda.model.UserList;
 import com.javed.lambda.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +60,15 @@ public class UserController {
     @GetMapping(value = "/users",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> userList(){
+    public ResponseEntity<UserList> userList(){
         List<User> userList = new ArrayList<User>();
-        return new ResponseEntity<List<User>>(userList, HttpStatus.OK);
+
+        userList.add(new User("mohdJaved", "admin123", "Mohd Javed", "Khan", "jal90javed@gmail.com", "Test Address 1", 123));
+        userList.add(new User("mohdJaved", "admin123", "Mohd Javed", "Khan", "jal90javed@gmail.com", "Test Address 1", 123));
+
+        UserList list = new UserList();
+        list.setUsers(userList);
+
+        return new ResponseEntity<UserList>(list, HttpStatus.OK);
     }
 }
