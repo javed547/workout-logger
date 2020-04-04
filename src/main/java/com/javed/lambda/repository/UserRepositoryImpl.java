@@ -3,6 +3,7 @@ package com.javed.lambda.repository;
 import com.javed.lambda.model.Credential;
 import com.javed.lambda.model.User;
 import com.javed.lambda.model.UserList;
+import com.javed.lambda.utility.ResponseParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +33,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User signup(User user) {
         DynamoDbClient dynamoDbClient = null;
         HashMap<String, AttributeValue> itemValues = new HashMap<String, AttributeValue>();
-        prepareUserInsert(itemValues, user);
+        ResponseParser.prepareUserInsert(itemValues, user);
 
         PutItemRequest putItemRequest = PutItemRequest
                 .builder()
@@ -84,7 +85,7 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             dynamoDbClient = DynamoDbClient.create();
             QueryResponse queryResponse = dynamoDbClient.query(queryRequest);
-            credentialResult = castToUsers(queryResponse.items());
+            credentialResult = ResponseParser.castToUsers(queryResponse.items());
             logger.info("successfully pulled user data for username : {}", credential.getUsername());
         } catch (DynamoDbException e) {
             logger.error("error occurred while retrieving record to dynamo db : {}", e.getMessage());
@@ -112,28 +113,6 @@ public class UserRepositoryImpl implements UserRepository {
         UserList list = new UserList();
         list.setUsers(userList);
         return list;
-    }
-
-    private HashMap<String, AttributeValue> prepareUserInsert(HashMap<String, AttributeValue> itemValues, User user) {
-        itemValues.put("username", AttributeValue.builder().s(user.getUsername()).build());
-        itemValues.put("password", AttributeValue.builder().s(user.getPassword()).build());
-        itemValues.put("firstname", AttributeValue.builder().s(user.getFirstname()).build());
-
-        itemValues.put("lastname", AttributeValue.builder().s(user.getLastname()).build());
-        itemValues.put("email", AttributeValue.builder().s(user.getEmail()).build());
-        itemValues.put("address", AttributeValue.builder().s(user.getAddress()).build());
-
-        itemValues.put("phone", AttributeValue.builder().s(String.valueOf(user.getPhone())).build());
-        logger.debug("user object created with details as {}", user.toString());
-        return itemValues;
-    }
-
-    private Credential castToUsers(List<Map<String, AttributeValue>> items) {
-        Credential credential = new Credential();
-        credential.setUsername(items.get(0).get("username").s());
-        credential.setPassword(items.get(0).get("password").s());
-        logger.debug("credential object created with details as {}", credential.toString());
-        return credential;
     }
 
 }
