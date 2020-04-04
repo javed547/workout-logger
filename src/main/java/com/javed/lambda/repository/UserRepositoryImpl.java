@@ -2,6 +2,7 @@ package com.javed.lambda.repository;
 
 import com.javed.lambda.model.Credential;
 import com.javed.lambda.model.User;
+import com.javed.lambda.model.UserList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +95,23 @@ public class UserRepositoryImpl implements UserRepository {
             }
         }
         return credentialResult;
+    }
+
+    /**
+     * list user available in application
+     *
+     * @return @{@link UserList}
+     */
+    @Override
+    public UserList listUser() {
+        List<User> userList = new ArrayList<User>();
+
+        userList.add(new User("mohdJaved", "admin123", "Mohd Javed", "Khan", "jal90javed@gmail.com", "Test Address 1", 123));
+        userList.add(new User("mohdJaved", "admin123", "Mohd Javed", "Khan", "jal90javed@gmail.com", "Test Address 1", 123));
+
+        UserList list = new UserList();
+        list.setUsers(userList);
+        return list;
     }
 
     private HashMap<String, AttributeValue> prepareUserInsert(HashMap<String, AttributeValue> itemValues, User user) {

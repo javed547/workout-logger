@@ -12,7 +12,7 @@ info:
     name: Mohd Javed Khan
     url: https://contact-us.foo.com
 servers:
-  - url: http://petstore.swagger.io/v1
+  - url: https://k7x7czas03.execute-api.ap-south-1.amazonaws.com/DEV
 tags:
   - name: users
     description: User sign up and sign in. You can also list down the users list (should be only for the administrator)

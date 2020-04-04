@@ -2,6 +2,7 @@ package com.javed.lambda.service;
 
 import com.javed.lambda.model.Credential;
 import com.javed.lambda.model.User;
+import com.javed.lambda.model.UserList;
 import com.javed.lambda.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Credential signin(Credential credential) {
         return userRepository.signin(credential);
+    }
+
+    /**
+     * list user available in application
+     *
+     * @return @{@link UserList}
+     */
+    @Override
+    public UserList listUser() {
+        return userRepository.listUser();
     }
 }

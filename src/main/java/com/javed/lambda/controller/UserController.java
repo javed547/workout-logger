@@ -45,6 +45,12 @@ public class UserController {
         return new ResponseEntity<User>(resultUser, HttpStatus.OK);
     }
 
+    /**
+     * Signin response entity.
+     *
+     * @param credential the credential
+     * @return the response entity
+     */
     @PostMapping(value = "/signin",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,18 +63,16 @@ public class UserController {
         }
     }
 
+    /**
+     * list user available in application
+     *
+     * @return @{@link ResponseEntity}
+     */
     @GetMapping(value = "/users",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserList> userList(){
-        List<User> userList = new ArrayList<User>();
-
-        userList.add(new User("mohdJaved", "admin123", "Mohd Javed", "Khan", "jal90javed@gmail.com", "Test Address 1", 123));
-        userList.add(new User("mohdJaved", "admin123", "Mohd Javed", "Khan", "jal90javed@gmail.com", "Test Address 1", 123));
-
-        UserList list = new UserList();
-        list.setUsers(userList);
-
+        UserList list = userService.listUser();
         return new ResponseEntity<UserList>(list, HttpStatus.OK);
     }
 }

@@ -2,6 +2,7 @@ package com.javed.lambda.service;
 
 import com.javed.lambda.model.Credential;
 import com.javed.lambda.model.User;
+import com.javed.lambda.model.UserList;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,4 +25,11 @@ public interface UserService {
      * @return @{@link Credential}
      */
     Credential signin(Credential credential);
+
+    /**
+     * list user available in application
+     *
+     * @return @{@link UserList}
+     */
+    UserList listUser();
 }
