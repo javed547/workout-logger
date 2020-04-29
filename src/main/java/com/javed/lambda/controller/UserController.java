@@ -4,21 +4,13 @@ import com.javed.lambda.model.Credential;
 import com.javed.lambda.model.User;
 import com.javed.lambda.model.UserList;
 import com.javed.lambda.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
-import software.amazon.awssdk.services.dynamodb.model.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The type User controller.
@@ -26,7 +18,7 @@ import java.util.Map;
 @RestController
 public class UserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LogManager.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
@@ -37,7 +29,7 @@ public class UserController {
      * @param user the user
      * @return the response entity
      */
-    @PostMapping(value = "/signup",
+    @PutMapping(value = "/signup",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> signup(@RequestBody User user) {

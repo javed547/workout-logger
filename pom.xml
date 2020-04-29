@@ -1,12 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.2.0.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.javed.api</groupId>
     <artifactId>workout-logger</artifactId>
     <version>0.0.1</version>
@@ -14,6 +18,19 @@
 
     <name>workout-logger</name>
     <url>http://maven.apache.org</url>
+    <description></description>
+    <contributors>
+        <contributor>
+            <name>Mohd Javed Khan</name>
+            <email>jal90javed@gmail.com</email>
+            <organization>Test Org</organization>
+            <organizationUrl>https://www.edrawsoft.com/sample-organization-structure.html</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+5:30 GMT</timezone>
+        </contributor>
+    </contributors>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,12 +39,14 @@
     </properties>
 
     <dependencies>
+        <!--JUnit dependency-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>4.13</version>
             <scope>test</scope>
         </dependency>
+        <!--JUnit dependency-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -45,32 +64,72 @@
             <version>1.4</version>
         </dependency>
 
+        <!--For access aws lambda core service-->
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-lambda-java-core</artifactId>
             <version>1.2.0</version>
             <scope>compile</scope>
         </dependency>
+        <!--For access aws lambda core service-->
+
+        <!--For access aws api gateway service-->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>apigateway</artifactId>
             <version>2.8.7</version>
         </dependency>
+        <!--For access aws api gateway service-->
+
+        <!--For access aws dynamo db service-->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>dynamodb</artifactId>
             <version>2.10.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.21</version>
-        </dependency>
+        <!--For access aws dynamo db service-->
+
+        <!--For logging purpose-->
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-lambda-java-log4j</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.8.2</version>
+        </dependency>
+        <!--For logging purpose-->
+
+        <!--Mockito Dependency-->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
+        <!--Mockito Dependency-->
+
+        <!-- https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4 -->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.7.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.7.4</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -91,11 +150,10 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
             </plugin>
         </plugins>
     </build>

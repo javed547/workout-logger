@@ -8,22 +8,39 @@ Resources:
     Properties:
       Handler: App.handleRequest
       Runtime: java8
-      CodeUri: ./src/main/java
+      CodeUri: target/workout-logger-0.0.1.jar
       Description: >-
         A simple backend (read/write to DynamoDB) with a RESTful API endpoint using Amazon API Gateway.
       MemorySize: 128
       Timeout: 10
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: "users"
+            TableName:
+              - "users"
+              - "workouts"
       Events:
-        Api1:
+        SignUp:
           Type: Api
           Properties:
-            Path: /user
+            Path: /signup
+            Method: PUT
+        SignIn:
+          Type: Api
+          Properties:
+            Path: /signin
             Method: POST
-        HealthApi:
+        Users:
           Type: Api
           Properties:
-            Path: /
+            Path: /users
+            Method: GET
+        LogWorkOut:
+          Type: Api
+          Properties:
+            Path: /users/{username}
+            Method: PUT
+        GetWorkOut:
+          Type: Api
+          Properties:
+            Path: /users/{username}
             Method: GET
